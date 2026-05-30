@@ -1,0 +1,79 @@
+create database online_exam_mgmt;
+use online_exam_mgmt;
+
+create table admin(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL
+);
+
+insert into admin(username , password) values('sahil' , '123');
+
+CREATE TABLE student (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) ,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) 
+);
+
+CREATE TABLE subject (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    subject_name VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE question (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    subject_id INT NOT NULL,
+    question_text TEXT NOT NULL,
+    option1 VARCHAR(255) NOT NULL,
+    option2 VARCHAR(255) NOT NULL,
+    option3 VARCHAR(255) NOT NULL,
+    option4 VARCHAR(255) NOT NULL,
+    correct_answer VARCHAR(255) NOT NULL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (subject_id) REFERENCES subject(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE exam (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    subject_id INT NOT NULL,
+    exam_name VARCHAR(100) NOT NULL,
+    exam_date DATE,
+    duration INT,   -- duration in minutes
+    
+    FOREIGN KEY (subject_id) REFERENCES subject(id)
+        ON DELETE CASCADE
+);
+
+select * from exam;
+
+CREATE TABLE exam_question (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    exam_id INT NOT NULL,
+    question_id INT NOT NULL,
+
+    FOREIGN KEY (exam_id) REFERENCES exam(id)
+        ON DELETE CASCADE,
+        
+    FOREIGN KEY (question_id) REFERENCES question(id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE result (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    exam_id INT NOT NULL,
+    marks INT NOT NULL,
+    exam_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (student_id) REFERENCES student(id)
+        ON DELETE CASCADE,
+        
+    FOREIGN KEY (exam_id) REFERENCES exam(id)
+        ON DELETE CASCADE
+);
+
+SET SQL_SAFE_UPDATES = 0;
+
